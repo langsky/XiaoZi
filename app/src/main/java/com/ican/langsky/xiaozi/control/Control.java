@@ -7,8 +7,6 @@ import io.realm.RealmResults;
  * Created by swd1 on 16-8-28.
  */
 public interface Control {
-    RealmResults query(QueryMode mode);
-    void doWhenDataChange(Object object);
-    void update(RealmObject object);
-    void delete(RealmObject object);
+    void queryToView(QueryMode mode);
+    void changeToView(Object object);
 }

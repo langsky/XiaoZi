@@ -8,10 +8,12 @@ import android.widget.TextView;
 
 import com.ican.langsky.xiaozi.R;
 import com.ican.langsky.xiaozi.model.Wage;
+import com.ican.langsky.xiaozi.utils.RealmTool;
 
 import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.RealmResults;
 
@@ -51,40 +53,34 @@ public class MainActivity extends MyActivity implements View.OnClickListener {
         tvTime.setOnClickListener(this);
     }
 
-    @Override
-    public RealmResults query(QueryMode mode) {
-        return realm.where(Wage.class).findAll();
-    }
-
-    @Override
-    public void doWhenDataChange(Object object) {
-
-    }
-
-    @Override
-    public void update(RealmObject object) {
-    }
-
-    @Override
-    public void delete(RealmObject object) {
-
-    }
 
     @Override
     public void onClick(View v) {
+        float wage = Float.valueOf(editText.getText().toString());
+        String time = tvTime.getText().toString();
         switch (v.getId()){
             case R.id.fab:
-                update(null);
-                Wage myIncome = (Wage) query(null).get(0);
-                tvBhos.setText(myIncome.insBigHospital.getAllExpend()+"");
-                tvEmi.setText(myIncome.insEmployInjury.getAllExpend()+"");
-                tvEnd.setText(myIncome.insEndowment.getAllExpend()+"");
-                tvHos.setText(myIncome.insHospital.getAllExpend()+"");
-                tvHou.setText(myIncome.housingFund.getAllExpend()+"");
-                tvMat.setText(myIncome.insMaternity.getAllExpend()+"");
-                tvUni.setText(myIncome.insUnemployed.getAllExpend()+"");
-                tvOut.setText(myIncome.expenditure +"");
+                Wage myIncome = RealmTool.dataToWage(getFormula(),wage,time);
+                RealmTool.dataToRealmAndView(myIncome,this);
                 break;
             }
         }
+
+    @Override
+    public void queryToView(QueryMode mode) {
+
+    }
+
+    @Override
+    public void changeToView(Object object) {
+        Wage myIncome = (Wage) object;
+        tvBhos.setText(myIncome.insBigHospital.getAllExpend()+"  "+myIncome.insHospital.getComExpend());
+        tvEmi.setText(myIncome.insEmployInjury.getAllExpend()+"  "+myIncome.insEmployInjury.getComExpend());
+        tvEnd.setText(myIncome.insEndowment.getAllExpend()+"  "+myIncome.insEndowment.getComExpend());
+        tvHos.setText(myIncome.insHospital.getAllExpend()+"  "+myIncome.insHospital.getComExpend());
+        tvHou.setText(myIncome.housingFund.getAllExpend()+"  "+myIncome.housingFund.getComExpend());
+        tvMat.setText(myIncome.insMaternity.getAllExpend()+"  "+myIncome.insMaternity.getComExpend());
+        tvUni.setText(myIncome.insUnemployed.getAllExpend()+"  "+myIncome.insUnemployed.getComExpend());
+        tvOut.setText(myIncome.myIncome +"");
+    }
 }

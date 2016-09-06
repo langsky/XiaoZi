@@ -16,19 +16,12 @@ import io.realm.RealmResults;
 public abstract class MyFragment extends Fragment implements Control {
 
     protected Realm realm;
-    protected RealmChangeListener listener = new RealmChangeListener() {
-        @Override
-        public void onChange(Object element) {
-            doWhenDataChange(element);
-        }
-    };
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (realm == null)
             realm = Realm.getDefaultInstance();
-        realm.addChangeListener(listener);
     }
 
     @Override
@@ -40,8 +33,4 @@ public abstract class MyFragment extends Fragment implements Control {
         }
     }
 
-    @Override
-    public RealmResults query(QueryMode mode) {
-        return RealmTool.query(mode);
-    }
 }

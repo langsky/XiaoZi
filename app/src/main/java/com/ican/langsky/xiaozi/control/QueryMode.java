@@ -13,4 +13,5 @@ public enum QueryMode {
     housing_fund,
     maternity_insurance,
     unemployed_insurance,
+    income_tax
 }

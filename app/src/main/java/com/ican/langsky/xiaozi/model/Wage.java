@@ -16,6 +16,7 @@ public class Wage extends RealmObject {
     public InsMaternity insMaternity;
     public InsUnemployed insUnemployed;
     public HousingFund housingFund;
+    public TaxIncome taxIncome;
     public float myWage;
     public float myIncome;
     public float expenditure;

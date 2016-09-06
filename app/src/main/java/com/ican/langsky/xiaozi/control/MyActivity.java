@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
+import com.ican.langsky.xiaozi.model.Formula;
 import com.ican.langsky.xiaozi.utils.RealmTool;
 
 import io.realm.Realm;
@@ -16,19 +17,13 @@ import io.realm.RealmResults;
 public abstract class MyActivity extends AppCompatActivity implements Control {
 
     protected Realm realm;
-    protected RealmChangeListener listener = new RealmChangeListener() {
-        @Override
-        public void onChange(Object element) {
-            doWhenDataChange(element);
-        }
-    };
+    private Formula formula;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (realm == null)
             realm = Realm.getDefaultInstance();
-        realm.addChangeListener(listener);
     }
 
     @Override
@@ -40,8 +35,21 @@ public abstract class MyActivity extends AppCompatActivity implements Control {
         }
     }
 
-    @Override
-    public RealmResults query(QueryMode mode) {
-        return RealmTool.query(mode);
+
+    public Formula getFormula(){
+        if (formula==null){
+            setFormula(new Formula());
+        }
+        return formula;
+    }
+
+    public void setFormula(final Formula formula) {
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                realm.insertOrUpdate(formula);
+            }
+        });
+        this.formula = formula;
     }
 }

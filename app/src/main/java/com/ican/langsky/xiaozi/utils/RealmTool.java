@@ -1,5 +1,6 @@
 package com.ican.langsky.xiaozi.utils;
 
+import com.ican.langsky.xiaozi.control.Control;
 import com.ican.langsky.xiaozi.control.QueryMode;
 import com.ican.langsky.xiaozi.model.Formula;
 import com.ican.langsky.xiaozi.model.HousingFund;
@@ -9,9 +10,11 @@ import com.ican.langsky.xiaozi.model.InsEndowment;
 import com.ican.langsky.xiaozi.model.InsHospital;
 import com.ican.langsky.xiaozi.model.InsMaternity;
 import com.ican.langsky.xiaozi.model.InsUnemployed;
+import com.ican.langsky.xiaozi.model.TaxIncome;
 import com.ican.langsky.xiaozi.model.Wage;
 
 import io.realm.Realm;
+import io.realm.RealmObject;
 import io.realm.RealmResults;
 
 /**
@@ -40,44 +43,74 @@ public class RealmTool {
                 return realm.where(Wage.class).findAllAsync();
             case formula:
                 return realm.where(Formula.class).findAllAsync();
+            case income_tax:
+                return realm.where(TaxIncome.class).findAllAsync();
             default:
                 throw new IllegalArgumentException("wrong mode");
         }
     }
 
-    public static void calculate(final Formula formula, final float wage, final String time) {
+    public static void dataToRealmAndView(final RealmObject object, Control control) {
         Realm realm = Realm.getDefaultInstance();
         realm.executeTransactionAsync(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
-                float[] per = {CalculationTool.BhosPer(formula,wage), holder.EmiPer(), holder.EndPer(), holder.HosPer(), holder.HouPer(), holder.MatPer(), holder.UniPer()};
-                float[] com = {holder.BhosCom(), holder.EmiCom(), holder.EndCom(), holder.HosCom(), holder.HouCom(), holder.MatCom(), holder.UniCom()};
-                InsBigHospital _insBigHospital = new InsBigHospital().setTimeData(time).setPerExpend(per[0]).setComExpend(com[0]);
-                InsEmployInjury emI_ins = new InsEmployInjury().setTimeData(time).setPerExpend(per[1]).setComExpend(com[1]);
-                InsEndowment end_ins = new InsEndowment().setTimeData(time).setPerExpend(per[2]).setComExpend(com[2]);
-                InsHospital hos_ins = new InsHospital().setTimeData(time).setPerExpend(per[3]).setComExpend(com[3]);
-                HousingFund hou_fund = new HousingFund().setTimeData(time).setPerExpend(per[4]).setComExpend(com[4]);
-                InsMaternity mat_ins = new InsMaternity().setTimeData(time).setPerExpend(per[5]).setComExpend(com[5]);
-                InsUnemployed unI_ins = new InsUnemployed().setTimeData(time).setPerExpend(per[6]).setComExpend(com[6]);
-                Wage myIncome = new Wage();
-                myIncome.time_id = time;
-                myIncome.insBigHospital = _insBigHospital;
-                myIncome.insEmployInjury = emI_ins;
-                myIncome.insEndowment = end_ins;
-                myIncome.insHospital = hos_ins;
-                myIncome.housingFund = hou_fund;
-                myIncome.insMaternity = mat_ins;
-                myIncome.insUnemployed = unI_ins;
-                myIncome.myWage = wage;
-                float y = 0;
-                for (int i = 0; i < per.length; i++) {
-                    y += per[i] + com[i];
-                }
-                myIncome.myIncome = wage - y;
-                myIncome.expenditure = y;
-                realm.insertOrUpdate(myIncome);
+                realm.insertOrUpdate(object);
             }
         });
+        control.changeToView(object);
+    }
+
+    private static float[][] caculateData(final Formula formula, final float wage) {
+        float[] per = {
+                CalculationTool.BhosPer(formula, wage),
+                CalculationTool.EmiPer(formula, wage),
+                CalculationTool.EndPer(formula, wage),
+                CalculationTool.HosPer(formula, wage),
+                CalculationTool.HouPer(formula, wage),
+                CalculationTool.MatPer(formula, wage),
+                CalculationTool.UniPer(formula, wage),
+                CalculationTool.TaxInc(formula,wage)};
+        float[] com = {
+                CalculationTool.BhosCom(formula, wage),
+                CalculationTool.EmiCom(formula, wage),
+                CalculationTool.EndCom(formula, wage),
+                CalculationTool.HosCom(formula, wage),
+                CalculationTool.HouCom(formula, wage),
+                CalculationTool.MatCom(formula, wage),
+                CalculationTool.UniCom(formula, wage),};
+        return new float[][]{per, com};
+    }
+
+    public static Wage dataToWage(final Formula formula, final float wage, String time) {
+        float[] per = caculateData(formula, wage)[0];
+        float[] com = caculateData(formula, wage)[1];
+        InsBigHospital _insBigHospital = new InsBigHospital().setTimeData(time).setPerExpend(per[0]).setComExpend(com[0]);
+        InsEmployInjury emI_ins = new InsEmployInjury().setTimeData(time).setPerExpend(per[1]).setComExpend(com[1]);
+        InsEndowment end_ins = new InsEndowment().setTimeData(time).setPerExpend(per[2]).setComExpend(com[2]);
+        InsHospital hos_ins = new InsHospital().setTimeData(time).setPerExpend(per[3]).setComExpend(com[3]);
+        HousingFund hou_fund = new HousingFund().setTimeData(time).setPerExpend(per[4]).setComExpend(com[4]);
+        InsMaternity mat_ins = new InsMaternity().setTimeData(time).setPerExpend(per[5]).setComExpend(com[5]);
+        InsUnemployed unI_ins = new InsUnemployed().setTimeData(time).setPerExpend(per[6]).setComExpend(com[6]);
+        TaxIncome inc_tax = new TaxIncome().setTimeData(time).setTax(per[7]);
+        Wage myIncome = new Wage();
+        myIncome.time_id = time;
+        myIncome.insBigHospital = _insBigHospital;
+        myIncome.insEmployInjury = emI_ins;
+        myIncome.insEndowment = end_ins;
+        myIncome.insHospital = hos_ins;
+        myIncome.housingFund = hou_fund;
+        myIncome.insMaternity = mat_ins;
+        myIncome.insUnemployed = unI_ins;
+        myIncome.taxIncome = inc_tax;
+        myIncome.myWage = wage;
+        float y = 0;
+        for (int i = 0; i < per.length; i++) {
+            y += per[i] + com[i];
+        }
+        myIncome.myIncome = wage - y;
+        myIncome.expenditure = y;
+        return myIncome;
     }
 
     /**
@@ -85,7 +118,7 @@ public class RealmTool {
      */
     public static class CalculationTool {
 
-        private float Emi(Formula formula, float wage) {
+        private static float Emi(Formula formula, float wage) {
             if (wage <= formula.min_base_emi)
                 return formula.min_base_emi;
             if (wage >= formula.max_base_emi)
@@ -93,7 +126,7 @@ public class RealmTool {
             return wage;
         }
 
-        private float End(Formula formula, float wage) {
+        private static float End(Formula formula, float wage) {
             if (wage <= formula.min_base_end)
                 return formula.min_base_end;
             if (wage >= formula.max_base_end)
@@ -101,7 +134,7 @@ public class RealmTool {
             return wage;
         }
 
-        private float Hos(Formula formula, float wage) {
+        private static float Hos(Formula formula, float wage) {
             if (wage <= formula.min_base_hos)
                 return formula.min_base_hos;
             if (wage >= formula.max_base_hos)
@@ -109,7 +142,7 @@ public class RealmTool {
             return wage;
         }
 
-        private float Hou(Formula formula, float wage) {
+        private static float Hou(Formula formula, float wage) {
             if (wage <= formula.min_base_hou)
                 return formula.min_base_hou;
             if (wage >= formula.max_base_hou)
@@ -117,7 +150,7 @@ public class RealmTool {
             return wage;
         }
 
-        private float Mat(Formula formula, float wage) {
+        private static float Mat(Formula formula, float wage) {
             if (wage <= formula.min_base_mat)
                 return formula.min_base_mat;
             if (wage >= formula.max_base_mat)
@@ -125,7 +158,7 @@ public class RealmTool {
             return wage;
         }
 
-        private float Uni(Formula formula, float wage) {
+        private static float Uni(Formula formula, float wage) {
             if (wage <= formula.min_base_uni)
                 return formula.min_base_uni;
             if (wage >= formula.max_base_uni)
@@ -133,60 +166,78 @@ public class RealmTool {
             return wage;
         }
 
-        public float BhosPer(Formula formula, float wage) {
+        public static float BhosPer(Formula formula, float wage) {
             return 3;
         }
 
-        public float BhosCom(Formula formula, float wage) {
+        public static float BhosCom(Formula formula, float wage) {
             return 0;
         }
 
-        public float EmiPer(Formula formula, float wage) {
+        public static float EmiPer(Formula formula, float wage) {
             return Emi(formula, wage) * formula.per_rate_emi;
         }
 
-        public float EmiCom(Formula formula, float wage) {
+        public static float EmiCom(Formula formula, float wage) {
             return Emi(formula, wage) * formula.com_rate_emi;
         }
 
-        public float EndPer(Formula formula, float wage) {
+        public static float EndPer(Formula formula, float wage) {
             return End(formula, wage) * formula.per_rate_end;
         }
 
-        public float EndCom(Formula formula, float wage) {
+        public static float EndCom(Formula formula, float wage) {
             return End(formula, wage) * formula.com_rate_end;
         }
 
-        public float HosPer(Formula formula, float wage) {
+        public static float HosPer(Formula formula, float wage) {
             return Hos(formula, wage) * formula.per_rate_hos;
         }
 
-        public float HosCom(Formula formula, float wage) {
+        public static float HosCom(Formula formula, float wage) {
             return Hos(formula, wage) * formula.com_rate_hos;
         }
 
-        public float HouPer(Formula formula, float wage) {
+        public static float HouPer(Formula formula, float wage) {
             return Hou(formula, wage) * formula.per_rate_hou;
         }
 
-        public float HouCom(Formula formula, float wage) {
+        public static float HouCom(Formula formula, float wage) {
             return Hou(formula, wage) * formula.com_rate_hou;
         }
 
-        public float MatPer(Formula formula, float wage) {
+        public static float MatPer(Formula formula, float wage) {
             return Mat(formula, wage) * formula.per_rate_mat;
         }
 
-        public float MatCom(Formula formula, float wage) {
+        public static float MatCom(Formula formula, float wage) {
             return Mat(formula, wage) * formula.com_rate_mat;
         }
 
-        public float UniPer(Formula formula, float wage) {
+        public static float UniPer(Formula formula, float wage) {
             return Uni(formula, wage) * formula.per_rate_uni;
         }
 
-        public float UniCom(Formula formula, float wage) {
+        public static float UniCom(Formula formula, float wage) {
             return Uni(formula, wage) * formula.com_rate_uni;
+        }
+
+        public static float TaxInc(Formula formula, float wage) {
+            if (wage<formula.f1)
+                return wage*formula.f1_rate_tax+formula.f1_base_tax;
+            if (wage<formula.f2)
+                return (wage-formula.f1)*formula.f2_rate_tax+formula.f2_base_tax;
+            if (wage<formula.f3)
+                return (wage-formula.f2)*formula.f3_rate_tax+formula.f3_base_tax;
+            if (wage<formula.f4)
+                return (wage-formula.f3)*formula.f4_rate_tax+formula.f4_base_tax;
+            if (wage<formula.f5)
+                return (wage-formula.f4)*formula.f5_rate_tax+formula.f5_base_tax;
+            if (wage<formula.f6)
+                return (wage-formula.f5)*formula.f6_rate_tax+formula.f6_base_tax;
+            if (wage>=formula.f6)
+                return (wage-formula.f6)*formula.f7_rate_tax+formula.f7_base_tax;
+            return 0;
         }
     }
 }

@@ -1,12 +1,14 @@
 package com.ican.langsky.xiaozi.model;
 
+import io.realm.RealmModel;
+import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by swd1 on 16-8-28.
  * endowment insurance
  */
-public class InsEndowment implements Insurance {
+public class InsEndowment extends RealmObject implements Insurance {
     @PrimaryKey
     public String time_id;
     private float per_expend;

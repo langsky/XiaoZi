@@ -1,12 +1,14 @@
 package com.ican.langsky.xiaozi.model;
 
+import io.realm.RealmModel;
+import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by swd1 on 16-8-28.
  * employment injury insurance 工伤保险
  */
-public class InsEmployInjury implements Insurance {
+public class InsEmployInjury extends RealmObject implements Insurance{
 
     @PrimaryKey
     public String time_id;

@@ -1,12 +1,14 @@
 package com.ican.langsky.xiaozi.model;
 
+import io.realm.RealmModel;
+import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by swd1 on 16-8-28.
  * unemployed insurance
  */
-public class InsUnemployed implements Insurance {
+public class InsUnemployed extends RealmObject implements Insurance {
 
     @PrimaryKey
     public String time_id;

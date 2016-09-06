@@ -53,23 +53,14 @@ public class StandardActivity extends MyActivity {
         });
     }
 
-    @Override
-    public RealmResults query(QueryMode mode) {
-        return null;
-    }
 
     @Override
-    public void doWhenDataChange(Object object) {
+    public void queryToView(QueryMode mode) {
 
     }
 
     @Override
-    public void update(RealmObject object) {
-
-    }
-
-    @Override
-    public void delete(RealmObject object) {
+    public void changeToView(Object object) {
 
     }
 }

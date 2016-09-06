@@ -45,4 +45,26 @@ public class Formula extends RealmObject {
     public float min_base_uni = 2585F;
     public float max_base_uni = 19389F;
 
+    public float f1_rate_tax = 0.03F;
+    public float f2_rate_tax = 0.1F;
+    public float f3_rate_tax = 0.2F;
+    public float f4_rate_tax = 0.25F;
+    public float f5_rate_tax = 0.3F;
+    public float f6_rate_tax = 0.35F;
+    public float f7_rate_tax = 0.45F;
+    public float f1_base_tax = 0;
+    public float f2_base_tax = 105;
+    public float f3_base_tax = 555;
+    public float f4_base_tax = 1005;
+    public float f5_base_tax = 2755;
+    public float f6_base_tax = 5505;
+    public float f7_base_tax = 13505;
+    public float f1 =1500;
+    public float f2 =4500;
+    public float f3 =9000;
+    public float f4 =35000;
+    public float f5 =55000;
+    public float f6 =80000;
+
+
 }

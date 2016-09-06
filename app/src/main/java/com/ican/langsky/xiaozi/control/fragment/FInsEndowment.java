@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 
 import com.ican.langsky.xiaozi.R;
 import com.ican.langsky.xiaozi.control.MyFragment;
+import com.ican.langsky.xiaozi.control.QueryMode;
 
 import io.realm.RealmObject;
 
@@ -17,7 +18,7 @@ import io.realm.RealmObject;
  * Use the {@link FInsEndowment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FInsEndowment extends MyFragment {
+public class FInsEndowment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -66,18 +67,4 @@ public class FInsEndowment extends MyFragment {
         return inflater.inflate(R.layout.fragment_formula, container, false);
     }
 
-    @Override
-    public void doWhenDataChange(Object object) {
-
-    }
-
-    @Override
-    public void update(RealmObject object) {
-
-    }
-
-    @Override
-    public void delete(RealmObject object) {
-
-    }
 }
