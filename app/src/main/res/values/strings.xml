@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">Material View Pager</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="wage">工资情况</string>
+    <string name="bhos">大病险</string>
+    <string name="emi">工伤险</string>
+    <string name="end">养老险</string>
+    <string name="hos">医疗险</string>
+    <string name="hou">公积金</string>
+    <string name="mat">生育险</string>
+    <string name="uni">失业险</string>
+    <string name="standardTransition">standardTransition</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
