@@ -20,4 +20,12 @@ public class TaxIncome extends RealmObject{
         incomeTax = tax;
         return this;
     }
+
+    public float getIncomeTax() {
+        return incomeTax;
+    }
+
+    public String getTime_id() {
+        return time_id;
+    }
 }

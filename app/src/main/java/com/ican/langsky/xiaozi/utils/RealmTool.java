@@ -70,7 +70,7 @@ public class RealmTool {
                 CalculationTool.HouPer(formula, wage),
                 CalculationTool.MatPer(formula, wage),
                 CalculationTool.UniPer(formula, wage),
-                CalculationTool.TaxInc(formula,wage)};
+                CalculationTool.TaxInc(formula, wage)};
         float[] com = {
                 CalculationTool.BhosCom(formula, wage),
                 CalculationTool.EmiCom(formula, wage),
@@ -78,7 +78,8 @@ public class RealmTool {
                 CalculationTool.HosCom(formula, wage),
                 CalculationTool.HouCom(formula, wage),
                 CalculationTool.MatCom(formula, wage),
-                CalculationTool.UniCom(formula, wage),};
+                CalculationTool.UniCom(formula, wage),
+        };
         return new float[][]{per, com};
     }
 
@@ -106,7 +107,7 @@ public class RealmTool {
         myIncome.myWage = wage;
         float y = 0;
         for (int i = 0; i < per.length; i++) {
-            y += per[i] + com[i];
+            y += per[i];
         }
         myIncome.myIncome = wage - y;
         myIncome.expenditure = y;
@@ -223,20 +224,23 @@ public class RealmTool {
         }
 
         public static float TaxInc(Formula formula, float wage) {
-            if (wage<formula.f1)
-                return wage*formula.f1_rate_tax+formula.f1_base_tax;
-            if (wage<formula.f2)
-                return (wage-formula.f1)*formula.f2_rate_tax+formula.f2_base_tax;
-            if (wage<formula.f3)
-                return (wage-formula.f2)*formula.f3_rate_tax+formula.f3_base_tax;
-            if (wage<formula.f4)
-                return (wage-formula.f3)*formula.f4_rate_tax+formula.f4_base_tax;
-            if (wage<formula.f5)
-                return (wage-formula.f4)*formula.f5_rate_tax+formula.f5_base_tax;
-            if (wage<formula.f6)
-                return (wage-formula.f5)*formula.f6_rate_tax+formula.f6_base_tax;
-            if (wage>=formula.f6)
-                return (wage-formula.f6)*formula.f7_rate_tax+formula.f7_base_tax;
+            float v = wage - 3500;
+            if (v<0)
+                return 0;
+            if (v < formula.f1)
+                return v * formula.f1_rate_tax + formula.f1_base_tax;
+            else if (v < formula.f2)
+                return (v-formula.f1) * formula.f2_rate_tax + formula.f2_base_tax;
+            else if (v < formula.f3)
+                return (v-formula.f2) * formula.f3_rate_tax + formula.f3_base_tax;
+            else if (v < formula.f4)
+                return (v-formula.f3) * formula.f4_rate_tax + formula.f4_base_tax;
+            else if (v < formula.f5)
+                return (v-formula.f4) * formula.f5_rate_tax + formula.f5_base_tax;
+            else if (v < formula.f6)
+                return (v-formula.f5) * formula.f6_rate_tax + formula.f6_base_tax;
+            else if (v >= formula.f6)
+                return (v - formula.f6) * formula.f7_rate_tax + formula.f7_base_tax;
             return 0;
         }
     }

@@ -74,13 +74,13 @@ public class MainActivity extends MyActivity implements View.OnClickListener {
     @Override
     public void changeToView(Object object) {
         Wage myIncome = (Wage) object;
-        tvBhos.setText(myIncome.insBigHospital.getAllExpend()+"  "+myIncome.insHospital.getComExpend());
-        tvEmi.setText(myIncome.insEmployInjury.getAllExpend()+"  "+myIncome.insEmployInjury.getComExpend());
-        tvEnd.setText(myIncome.insEndowment.getAllExpend()+"  "+myIncome.insEndowment.getComExpend());
-        tvHos.setText(myIncome.insHospital.getAllExpend()+"  "+myIncome.insHospital.getComExpend());
-        tvHou.setText(myIncome.housingFund.getAllExpend()+"  "+myIncome.housingFund.getComExpend());
-        tvMat.setText(myIncome.insMaternity.getAllExpend()+"  "+myIncome.insMaternity.getComExpend());
-        tvUni.setText(myIncome.insUnemployed.getAllExpend()+"  "+myIncome.insUnemployed.getComExpend());
-        tvOut.setText(myIncome.myIncome +"");
+        tvBhos.setText(myIncome.insBigHospital.getPerExpend()+"  "+myIncome.insBigHospital.getComExpend());
+        tvEmi.setText(myIncome.insEmployInjury.getPerExpend()+"  "+myIncome.insEmployInjury.getComExpend());
+        tvEnd.setText(myIncome.insEndowment.getPerExpend()+"  "+myIncome.insEndowment.getComExpend());
+        tvHos.setText(myIncome.insHospital.getPerExpend()+"  "+myIncome.insHospital.getComExpend());
+        tvHou.setText(myIncome.housingFund.getPerExpend()+"  "+myIncome.housingFund.getComExpend());
+        tvMat.setText(myIncome.insMaternity.getPerExpend()+"  "+myIncome.insMaternity.getComExpend());
+        tvUni.setText(myIncome.insUnemployed.getPerExpend()+"  "+myIncome.insUnemployed.getComExpend());
+        tvOut.setText(myIncome.myIncome +"  "+myIncome.expenditure+"  "+myIncome.taxIncome.getIncomeTax());
     }
 }
